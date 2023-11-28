@@ -1,0 +1,19 @@
+@startuml edutrack
+skinparam defaultFontName Futura
+skinparam defaultFontSize 16
+title edutrack
+
+entity user {
+    name string <<PK>>
+}
+
+entity Lecturer {
+    name string <<PK>>
+    ---
+    userId String <<FK>>
+}
+
+
+user }o--||Lecturer :has
+
+@enduml
