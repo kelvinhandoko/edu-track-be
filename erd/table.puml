@@ -1,19 +1,85 @@
 @startuml edutrack
-skinparam defaultFontName Futura
+skinparam defaultFontName Poppins
 skinparam defaultFontSize 16
 title edutrack
 
-entity user {
-    name string <<PK>>
+entity User{
+    id String <<PK>>
 }
-
+' entity chat{}
 entity Lecturer {
     name string <<PK>>
+    bio String
+    createdAt Date
+    updatedAt Date
     ---
     userId String <<FK>>
 }
 
+entity Profile {
+    id String <<PK>>
+    dob date
+    fullname string
+}
 
-user }o--||Lecturer :has
+entity course_status {
+    userId String <<FK>>
+    courseId String <<FK>>
+    id String <<PK>>
+    completion Int
+    createdAt Date
+    updatedAt Date
+    type enum('visited','purchased','wishlist')
+}
 
+entity Course {
+    id String <<PK>>
+    price Int
+    backgroundUrl String
+    createdAt Date
+    updatedAt Date
+    ---
+    categoryId String <<FK>>
+    lecturerId String <<FK>>
+    
+}
+
+entity Comment {
+    id String <<PK>>
+    commentBody String
+    isLecturer Boolean
+    ---
+    courseSectionId String <<FK>>
+    userId String <<FK>>
+}
+
+entity Category {
+    id String <<PK>>
+    name string
+    createdAt Date
+    updatedAt Date
+}
+
+entity CourseSection {
+    id String <<PK>>
+    title String
+    description String
+    videoUrl String
+    position Int
+    isPublished Boolean
+    isFree Boolean
+    createdAt Date
+    updatedAt Date
+    ---
+    courseId String <<FK>>
+}
+
+Lecturer ||--o{Course :has
+Category ||--o{Course :has
+Course ||--o{ CourseSection
+Course ||--o{course_status
+CourseSection ||--o{ Comment
+Profile |o--||User
+User ||--o| Lecturer
+User ||--o{Comment
 @enduml
