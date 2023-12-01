@@ -20,3 +20,11 @@ model Lecturer {
 
   @@unique([name, userId])
 }
+
+model Profile {
+  id        String    @id @default(cuid())
+  dob       DateTime?
+  fullname  String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}

@@ -18,9 +18,9 @@ class BaseController {
      * @template T
      * @param {import('express').Response} res - The response object from Express.
      * @param {Object} [dto] - The data transfer object to be sent as a JSON response.
-     * @param {number} [dto.code] - The status code to be sent in the response.
+     * @param {number} dto.code - The status code to be sent in the response.
      * @param {T} [dto.data] - The actual data to be sent in the response.
-     * @param {string} [dto.message] - A message to be sent in the response.
+     * @param {string} dto.message - A message to be sent in the response.
      * @returns {void}
      */
     ok(res, dto) {
@@ -35,9 +35,9 @@ class BaseController {
      * @template T
      * @param {import('express').Response} res - The response object from Express.
      * @param {Object} [dto] - The data transfer object to be sent as a JSON response.
-     * @param {number} [dto.code] - The status code to be sent in the response.
+     * @param {number} dto.code - The status code to be sent in the response.
      * @param {T} [dto.data] - The actual data to be sent in the response.
-     * @param {string} [dto.message] - A message to be sent in the response.
+     * @param {string} dto.message - A message to be sent in the response.
      * @returns {void}
      */
     created(res, dto) {

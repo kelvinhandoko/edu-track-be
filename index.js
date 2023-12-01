@@ -12,5 +12,5 @@ app.use(morgan("dev"))
 app.use("/api", router)
 
 app.listen(port, () => {
-    console.log(`server is run on: http://localhost:${port}`)
+    console.log(`⚡️ server is run on: http://localhost:${port}`)
 })

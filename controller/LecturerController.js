@@ -10,7 +10,9 @@ class LecturerController extends BaseController {
     async create(req, res) {
         try {
             const { name, bio, userId } = req.body
-            const findLecturer = this.db.lecturer.findUnique({ where: { name } })
+            const findLecturer = this.db.lecturer.findUnique({
+                where: { name_userId: { userId, name } },
+            })
             if (findLecturer) return this.conflict(res, "lecturer sudah dibuat.")
             const createLecturer = await this.db.lecturer.create({ data: { name, bio, userId } })
             return this.created(res, {
@@ -28,7 +30,7 @@ class LecturerController extends BaseController {
      * @param {import('express').Response} res - The response object from Express.
      * @returns {Promise<import("@prisma/client").Lecturer[]>}
      */
-    async getDetail(req, res) {
+    static async getDetail(req, res) {
         try {
             const { id } = req.params
             const result = await this.db.lecturer.findUnique({ where: { id } })
