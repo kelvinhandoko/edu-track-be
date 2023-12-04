@@ -5,6 +5,6 @@ const router = Router()
 
 router.use("/v1", v1Router)
 
-router.get("*", (_, res) => res.status(404).json({ message: "route not found" }))
+router.get("*", (req, res) => res.status(404).json({ message: "route not found" }))
 
 module.exports = router

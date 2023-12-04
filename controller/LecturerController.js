@@ -30,7 +30,7 @@ class LecturerController extends BaseController {
      * @param {import('express').Response} res - The response object from Express.
      * @returns {Promise<import("@prisma/client").Lecturer[]>}
      */
-    static async getDetail(req, res) {
+    async getDetail(req, res) {
         try {
             const { id } = req.params
             const result = await this.db.lecturer.findUnique({ where: { id } })
