@@ -51,11 +51,11 @@ class BaseController {
     /**
      * Responds with a 400 Client Error status.
      * @param {import('express').Response} res - The response object from Express.
-     * @param {string} [message] - Optional message for the client error response.
+     * @param {string} [message] - ini untuk balikan message
      * @returns {import('express').Response} The Express response object.
      */
     clientError(res, message) {
-        return BaseController.jsonResponse(res, 400, message ?? "Unauthorized")
+        return BaseController.jsonResponse(res, 400, message ?? "client error")
     }
 
     /**
