@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Category {
-  id        String   @id @default(cuid())
-  name      String
+  id          String   @id @default(cuid())
+  name        String
   description String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Course      Course[]
 }
 
 model Lecturer {
@@ -21,7 +22,8 @@ model Lecturer {
   bio       String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  userId    String
+  userId    String   @unique
+  Course    Course[]
 
   @@unique([name, userId])
 }
@@ -33,4 +35,34 @@ model Profile {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    String    @unique
+}
+
+model Course {
+  id            String          @id @default(cuid())
+  name          String
+  price         Int
+  backgroundUrl String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  category      Category        @relation(fields: [categoryId], references: [id])
+  categoryId    String
+  lecturer      Lecturer        @relation(fields: [lecturerId], references: [id])
+  lecturerId    String
+  CourseSection CourseSection[]
+
+  @@unique([lecturerId, name])
+}
+
+model CourseSection {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  videoUrl    String
+  position    Int
+  isPublished Boolean
+  isFree      Boolean
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId    String
 }

@@ -9,15 +9,17 @@ class LecturerController extends BaseController {
      */
     async create(req, res) {
         try {
-            const { name, bio, userId } = req.body
+            const { name, bio } = req.body
+            const { uid } = req.user
             const findLecturer = await this.db.lecturer.findUnique({
-                where: { name_userId: { userId, name } },
+                where: { name_userId: { userId: uid, name } },
             })
             if (findLecturer) return this.conflict(res, "lecturer sudah dibuat.")
-            const createLecturer = await this.db.lecturer.create({ data: { name, bio, userId } })
+            const createLecturer = await this.db.lecturer.create({
+                data: { name, bio, userId: uid },
+            })
             return this.created(res, {
                 code: res.statusCode,
-                data: createLecturer,
                 message: "success create lecturer",
             })
         } catch (error) {
@@ -89,6 +91,29 @@ class LecturerController extends BaseController {
                 code: res.statusCode,
                 data: deletedLecturer,
                 message: "success delete lecturer",
+            })
+        } catch (error) {
+            return this.fail(res, error.message)
+        }
+    }
+
+    /**
+     * Get all course by lecturer.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Course[]>}
+     */
+    async getAllCourses(req, res) {
+        try {
+            const { id } = req.params
+            const res = await this.db.course.findMany({
+                where: { lecturerId: id },
+                orderBy: { createdAt: "desc" },
+            })
+            return this.ok(res, {
+                code: res.statusCode,
+                data: res,
+                message: "Successfully retrieved all course",
             })
         } catch (error) {
             return this.fail(res, error.message)

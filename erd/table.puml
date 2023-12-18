@@ -41,7 +41,6 @@ entity Course {
     ---
     categoryId String <<FK>>
     lecturerId String <<FK>>
-    
 }
 
 entity Comment {
