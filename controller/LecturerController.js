@@ -94,6 +94,29 @@ class LecturerController extends BaseController {
             return this.fail(res, error.message)
         }
     }
+
+    /**
+     * Get all course by lecturer.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Course[]>}
+     */
+    async getAllCourses(req, res) {
+        try {
+            const { id } = req.params
+            const res = await this.db.course.findMany({
+                where: { lecturerId: id },
+                orderBy: { createdAt: "desc" },
+            })
+            return this.ok(res, {
+                code: res.statusCode,
+                data: res,
+                message: "Successfully retrieved all course",
+            })
+        } catch (error) {
+            return this.fail(res, error.message)
+        }
+    }
 }
 
 module.exports = LecturerController

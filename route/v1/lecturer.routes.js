@@ -7,6 +7,7 @@ const lecturerController = new LecturerController()
 
 lecturerRouter.post("/", lecturerController.create)
 lecturerRouter.get("/:id", lecturerController.getDetail)
+lecturerRouter.get("/:id/courses", lecturerController.getAllCourses)
 lecturerRouter.put("/:id", lecturerController.update)
 lecturerRouter.delete("/:id", lecturerController.delete)
 
