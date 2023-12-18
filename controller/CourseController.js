@@ -23,14 +23,19 @@ class CourseController extends BaseController {
                  */
                 const { backgroundUrl, categoryId, name, price, sections } = req.body
                 const { uid } = req.user
+
                 const findCourse = await tx.course.findUnique({
                     where: { lecturerId_name: { lecturerId: uid, name } },
                 })
+
+                const findLecturer = await tx.lecturer.findUnique({ where: { userId: uid } })
+
                 if (findCourse) return this.conflict(res, "course ini sudah dibuat sebelumnya")
                 const findCategory = await tx.category.findUnique({ where: { id: categoryId } })
                 if (!findCategory) return this.notFound(res, "category ini tidak ditemukan.")
+
                 const createdCourse = await tx.course.create({
-                    data: { name, backgroundUrl, categoryId, price, lecturerId: uid },
+                    data: { name, backgroundUrl, categoryId, price, lecturerId: findLecturer.id },
                 })
                 await Promise.all(
                     sections.map(async section => {

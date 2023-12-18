@@ -9,15 +9,17 @@ class LecturerController extends BaseController {
      */
     async create(req, res) {
         try {
-            const { name, bio, userId } = req.body
+            const { name, bio } = req.body
+            const { uid } = req.user
             const findLecturer = await this.db.lecturer.findUnique({
-                where: { name_userId: { userId, name } },
+                where: { name_userId: { userId: uid, name } },
             })
             if (findLecturer) return this.conflict(res, "lecturer sudah dibuat.")
-            const createLecturer = await this.db.lecturer.create({ data: { name, bio, userId } })
+            const createLecturer = await this.db.lecturer.create({
+                data: { name, bio, userId: uid },
+            })
             return this.created(res, {
                 code: res.statusCode,
-                data: createLecturer,
                 message: "success create lecturer",
             })
         } catch (error) {

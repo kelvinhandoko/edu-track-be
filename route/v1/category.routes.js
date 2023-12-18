@@ -5,8 +5,6 @@ const authentication = require("../../middleware/authentication")
 const categoryRouter = Router()
 const categoryController = new CategoryController()
 
-categoryRouter.use(authentication)
-
 categoryRouter.post("/", categoryController.create)
 categoryRouter.get("/", categoryController.getAll)
 categoryRouter.get("/:id", categoryController.getDetail)
