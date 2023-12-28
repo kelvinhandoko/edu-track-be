@@ -35,6 +35,10 @@ model Profile {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   userId    String    @unique
+
+  @@index([userId])
+
+  User User @relation(fields: [userId], references: [id])
 }
 
 model Course {
@@ -49,6 +53,7 @@ model Course {
   lecturer      Lecturer        @relation(fields: [lecturerId], references: [id])
   lecturerId    String
   CourseSection CourseSection[]
+  CourseStatus  CourseStatus[] 
 
   @@unique([lecturerId, name])
 }
@@ -65,4 +70,47 @@ model CourseSection {
   updatedAt   DateTime @updatedAt
   course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String
+  Comment     Comment[] 
+}
+
+model CourseStatus {
+  id          String   @id @default(cuid())
+  completion  Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  type        String
+  userId      String
+  courseId    String
+
+  @@index([userId])
+  @@index([courseId])
+
+  User   User   @relation(fields: [userId], references: [id])
+  Course Course @relation(fields: [courseId], references: [id])
+}
+
+model User {
+  id        String    @id @default(cuid())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  Comment   Comment[]
+  Profile   Profile?
+  CourseStatus CourseStatus[] 
+  @@index([id])
+}
+
+model Comment {
+  id              String   @id @default(cuid())
+  commentBody     String
+  isLecturer      Boolean
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  courseSectionId String
+  userId          String
+
+  @@index([courseSectionId])
+  @@index([userId])
+
+  CourseSection CourseSection @relation(fields: [courseSectionId], references: [id])
+  User          User          @relation(fields: [userId], references: [id])
 }
