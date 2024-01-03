@@ -64,18 +64,16 @@ class CourseController extends BaseController {
      */
     async getAll(req, res) {
         try {
-            const data = await this.db.course.findMany({
+            const res = await this.db.course.findMany({
                 orderBy: { createdAt: "desc" },
-                include: { lecturer: true },
             })
-
             return this.ok(res, {
                 code: res.statusCode,
-                data,
+                data: res,
                 message: "Successfully retrieved all course",
             })
         } catch (error) {
-            return this.fail(res, "ini error")
+            return this.fail(res, error.message)
         }
     }
 
