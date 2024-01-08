@@ -66,7 +66,7 @@ class CourseController extends BaseController {
         try {
             const data = await this.db.course.findMany({
                 orderBy: { createdAt: "desc" },
-                include: { lecturer: true },
+                include: { lecturer: true, CourseSection: true },
             })
 
             return this.ok(res, {
@@ -90,6 +90,7 @@ class CourseController extends BaseController {
             const { id } = req.params
             const result = await this.db.course.findUnique({
                 where: { id },
+                include: { CourseSection: true, lecturer: true },
             })
             if (!result) return this.notFound(res, "course not found.")
             return this.ok(res, {

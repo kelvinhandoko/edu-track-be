@@ -35,12 +35,18 @@ class LecturerController extends BaseController {
     async getDetail(req, res) {
         try {
             const { id } = req.params
-            const result = await this.db.lecturer.findUnique({ where: { id } })
+            const result = await this.db.lecturer.findUnique({
+                where: { id },
+                include: { Course: { include: { CourseSection: true } } },
+            })
 
             if (!result) return this.notFound(res, "lecturer not found.")
+            const findProfile = await this.db.profile.findUnique({
+                where: { userId: result.userId },
+            })
             return this.ok(res, {
                 code: res.statusCode,
-                data: result,
+                data: { ...result, pictureUrl: findProfile.pictureUrl },
                 message: "success get lecturer detail",
             })
         } catch (error) {
@@ -114,6 +120,25 @@ class LecturerController extends BaseController {
                 code: res.statusCode,
                 data: res,
                 message: "Successfully retrieved all course",
+            })
+        } catch (error) {
+            return this.fail(res, error.message)
+        }
+    }
+
+    /**
+     * Get all course by lecturer.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Lecturer[]>}
+     */
+    async getAllLecturer(req, res) {
+        try {
+            const res = await this.db.lecturer.findMany({ orderBy: { createdAt: "asc" } })
+            return this.ok(res, {
+                code: res.statusCode,
+                data: res,
+                message: "Successfully retrieved all lecturer",
             })
         } catch (error) {
             return this.fail(res, error.message)
