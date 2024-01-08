@@ -172,6 +172,28 @@ class CourseController extends BaseController {
             return this.fail(res, error.message)
         }
     }
+    /**
+     * search courses.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Course>[]}
+     */
+    async search(req, res) {
+        try {
+            const { q } = req.query
+            const splitQuery = q.split(" ")
+            const findCourses = await this.db.course.findMany({
+                where: { name: { search: `${splitQuery}` } },
+            })
+            return this.ok(res, {
+                code: res.statusCode,
+                message: "success retrieved search courses",
+                data: findCourses,
+            })
+        } catch (error) {
+            throw error.message
+        }
+    }
 }
 
 module.exports = CourseController

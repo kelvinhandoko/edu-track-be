@@ -20,9 +20,6 @@ const userProfilePayload = {
 }
 
 describe("/api/v1/profile", async () => {
-    beforeEach(async () => {
-        await resetDb()
-    })
     describe(`[GET]`, () => {
         it("should return respond with a `401` status code because user unauthorized", async () => {
             const { status, body } = await request(app).get(API_ROUTE)

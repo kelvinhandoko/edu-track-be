@@ -5,9 +5,5 @@ export default defineConfig({
         include: ["tests/**/*.test.js", "!/tests"],
         setupFiles: ["/tests/helpers/setup.js"],
         threads: false,
-        coverage: {
-            reporter: ["html", "json"],
-            enabled: true,
-        },
     },
 })
