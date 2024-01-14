@@ -125,7 +125,6 @@ class LecturerController extends BaseController {
             return this.fail(res, error.message)
         }
     }
-
     /**
      * Get all course by lecturer.
      * @param {import('express').Request} req - The request object from Express.

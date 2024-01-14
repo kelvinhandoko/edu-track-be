@@ -90,6 +90,7 @@ class CourseController extends BaseController {
             const { id } = req.params
             const result = await this.db.course.findUnique({
                 where: { id },
+
                 include: { CourseSection: true, lecturer: true },
             })
             if (!result) return this.notFound(res, "course not found.")
