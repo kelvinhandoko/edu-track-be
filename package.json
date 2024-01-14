@@ -8,6 +8,7 @@
         "db:push": "npx prisma db push",
         "db:studio": "npx prisma studio",
         "test:int": "./scripts/run-integration.sh",
+        "test:int:win": "./scripts/run-integration.ps1",
         "test:int:ui": "./scripts/run-integration.sh --ui",
         "test:coverage": "vitest run --coverage"
     },

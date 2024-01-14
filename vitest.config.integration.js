@@ -6,4 +6,7 @@ export default defineConfig({
         setupFiles: ["/tests/helpers/setup.js"],
         threads: false,
     },
+    coverage: {
+        enabled: true,
+    },
 })
