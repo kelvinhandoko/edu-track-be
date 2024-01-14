@@ -64,16 +64,18 @@ class CourseController extends BaseController {
      */
     async getAll(req, res) {
         try {
-            const res = await this.db.course.findMany({
+            const data = await this.db.course.findMany({
                 orderBy: { createdAt: "desc" },
+                include: { lecturer: true, CourseSection: true },
             })
+
             return this.ok(res, {
                 code: res.statusCode,
-                data: res,
+                data,
                 message: "Successfully retrieved all course",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, "ini error")
         }
     }
 
@@ -88,6 +90,8 @@ class CourseController extends BaseController {
             const { id } = req.params
             const result = await this.db.course.findUnique({
                 where: { id },
+
+                include: { CourseSection: true, lecturer: true },
             })
             if (!result) return this.notFound(res, "course not found.")
             return this.ok(res, {
@@ -167,6 +171,28 @@ class CourseController extends BaseController {
             })
         } catch (error) {
             return this.fail(res, error.message)
+        }
+    }
+    /**
+     * search courses.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Course>[]}
+     */
+    async search(req, res) {
+        try {
+            const { q } = req.query
+            const splitQuery = q.split(" ")
+            const findCourses = await this.db.course.findMany({
+                where: { name: { search: `${splitQuery}` } },
+            })
+            return this.ok(res, {
+                code: res.statusCode,
+                message: "success retrieved search courses",
+                data: findCourses,
+            })
+        } catch (error) {
+            throw error.message
         }
     }
 }

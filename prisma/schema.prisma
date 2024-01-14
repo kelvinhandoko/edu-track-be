@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -29,16 +30,13 @@ model Lecturer {
 }
 
 model Profile {
-  id        String    @id @default(cuid())
-  dob       DateTime?
-  fullname  String?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  userId    String    @unique
-
-  @@index([userId])
-
-  User User @relation(fields: [userId], references: [id])
+  id         String    @id @default(cuid())
+  dob        DateTime?
+  fullname   String?
+  pictureUrl String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  userId     String    @unique
 }
 
 model Course {
@@ -53,9 +51,9 @@ model Course {
   lecturer      Lecturer        @relation(fields: [lecturerId], references: [id])
   lecturerId    String
   CourseSection CourseSection[]
-  CourseStatus  CourseStatus[] 
 
   @@unique([lecturerId, name])
+  @@fulltext([name])
 }
 
 model CourseSection {
