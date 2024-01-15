@@ -9,30 +9,28 @@ class CommentController extends BaseController {
      */
     async create(req, res) {
         try {
-            return this.db.$transaction(async (tx) => {
-                const { commentBody, isLecturer, courseSectionId } = req.body;
-                const { uid } = req.user;
+            const { commentBody, isLecturer, courseSectionId } = req.body;
+            const { uid } = req.user;
 
-                const findUser = await tx.user.findUnique({
-                    where: { id: uid },
-                });
+            const findUser = await this.db.user.findUnique({
+                where: { id: uid },
+            });
 
-                if (!findUser) return this.notFound(res, "User not found.");
+            if (!findUser) return this.notFound(res, "User not found.");
 
-                const createdComment = await tx.comment.create({
-                    data: {
-                        commentBody,
-                        isLecturer,
-                        courseSectionId,
-                        userId: findUser.id,
-                    },
-                });
+            const createdComment = await this.db.comment.create({
+                data: {
+                    commentBody,
+                    isLecturer,
+                    courseSectionId,
+                    userId: findUser.id,
+                },
+            });
 
-                return this.created(res, {
-                    code: res.statusCode,
-                    data: createdComment,
-                    message: "Comment created successfully",
-                });
+            return this.created(res, {
+                code: res.statusCode,
+                data: createdComment,
+                message: "Comment created successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -91,20 +89,18 @@ class CommentController extends BaseController {
      */
     async update(req, res) {
         try {
-            return this.db.$transaction(async (tx) => {
-                const { commentBody, isLecturer } = req.body;
-                const { id } = req.params;
+            const { commentBody, isLecturer } = req.body;
+            const { id } = req.params;
 
-                const updatedComment = await tx.comment.update({
-                    data: { commentBody, isLecturer },
-                    where: { id },
-                });
+            const updatedComment = await this.db.comment.update({
+                data: { commentBody, isLecturer },
+                where: { id },
+            });
 
-                return this.ok(res, {
-                    code: res.statusCode,
-                    data: updatedComment,
-                    message: "Comment updated successfully",
-                });
+            return this.ok(res, {
+                code: res.statusCode,
+                data: updatedComment,
+                message: "Comment updated successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
