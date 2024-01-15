@@ -1,4 +1,4 @@
-const BaseController = require("./BaseController")
+const BaseController = require("./BaseController");
 
 class CategoryController extends BaseController {
     /**
@@ -9,17 +9,17 @@ class CategoryController extends BaseController {
      */
     async create(req, res) {
         try {
-            const { name } = req.body
+            const { name } = req.body;
             const createCategory = await this.db.category.create({
                 data: { name },
-            })
+            });
             return this.created(res, {
                 code: res.statusCode,
                 data: createCategory,
                 message: "Category created successfully",
-            })
+            });
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error.message);
         }
     }
 
@@ -31,14 +31,14 @@ class CategoryController extends BaseController {
      */
     async getAll(req, res) {
         try {
-            const categories = await this.db.category.findMany()
+            const categories = await this.db.category.findMany();
             return this.ok(res, {
                 code: res.statusCode,
                 data: categories,
                 message: "Successfully retrieved all categories",
-            })
+            });
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error.message);
         }
     }
 
@@ -50,16 +50,16 @@ class CategoryController extends BaseController {
      */
     async getDetail(req, res) {
         try {
-            const { id } = req.params
-            const result = await this.db.category.findUnique({ where: { id } })
-            if (!result) return this.notFound(res, "Category not found.")
+            const { id } = req.params;
+            const result = await this.db.category.findUnique({ where: { id } });
+            if (!result) return this.notFound(res, "Category not found.");
             return this.ok(res, {
                 code: res.statusCode,
                 data: result,
                 message: "Successfully retrieved category details",
-            })
+            });
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error.message);
         }
     }
 
@@ -71,19 +71,19 @@ class CategoryController extends BaseController {
      */
     async update(req, res) {
         try {
-            const { id } = req.params
-            const { name } = req.body
+            const { id } = req.params;
+            const { name } = req.body;
             const updatedCategory = await this.db.category.update({
                 where: { id },
                 data: { name },
-            })
+            });
             return this.ok(res, {
                 code: res.statusCode,
                 data: updatedCategory,
                 message: "Category updated successfully",
-            })
+            });
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error.message);
         }
     }
 
@@ -95,16 +95,16 @@ class CategoryController extends BaseController {
      */
     async delete(req, res) {
         try {
-            const { id } = req.params
-            await this.db.category.delete({ where: { id } })
+            const { id } = req.params;
+            await this.db.category.delete({ where: { id } });
             return this.ok(res, {
                 code: res.statusCode,
                 message: "Category deleted successfully",
-            })
+            });
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error.message);
         }
     }
 }
 
-module.exports = CategoryController
+module.exports = CategoryController;
