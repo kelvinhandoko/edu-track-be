@@ -37,6 +37,7 @@ model Profile {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   userId     String    @unique
+  User       User[]
 }
 
 model Course {
@@ -51,49 +52,52 @@ model Course {
   lecturer      Lecturer        @relation(fields: [lecturerId], references: [id])
   lecturerId    String
   CourseSection CourseSection[]
+  CourseStatus  CourseStatus[]
 
   @@unique([lecturerId, name])
   @@fulltext([name])
 }
 
 model CourseSection {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String?
   videoUrl    String
   position    Int
   isPublished Boolean
   isFree      Boolean
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String
-  Comment     Comment[] 
+  Comment     Comment[]
 }
 
 model CourseStatus {
-  id          String   @id @default(cuid())
-  completion  Int
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  type        String
-  userId      String
-  courseId    String
-
-  @@index([userId])
-  @@index([courseId])
+  id         String   @id @default(cuid())
+  completion Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  type       String
+  userId     String
+  courseId   String
 
   User   User   @relation(fields: [userId], references: [id])
   Course Course @relation(fields: [courseId], references: [id])
+
+  @@index([userId])
+  @@index([courseId])
 }
 
 model User {
-  id        String    @id @default(cuid())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Comment   Comment[]
-  Profile   Profile?
-  CourseStatus CourseStatus[] 
+  id           String         @id @default(cuid())
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Comment      Comment[]
+  Profile      Profile?       @relation(fields: [profileId], references: [id])
+  CourseStatus CourseStatus[]
+  profileId    String?
+
   @@index([id])
 }
 
@@ -106,9 +110,9 @@ model Comment {
   courseSectionId String
   userId          String
 
-  @@index([courseSectionId])
-  @@index([userId])
-
   CourseSection CourseSection @relation(fields: [courseSectionId], references: [id])
   User          User          @relation(fields: [userId], references: [id])
+
+  @@index([courseSectionId])
+  @@index([userId])
 }
