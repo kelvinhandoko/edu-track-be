@@ -1,22 +1,36 @@
 const BaseController = require("./BaseController");
 
-class CategoryController extends BaseController {
+class CommentController extends BaseController {
     /**
-     * Create a new category.
+     * Create a new comment.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").Comment>}
      */
     async create(req, res) {
         try {
-            const { name } = req.body;
-            const createCategory = await this.db.category.create({
-                data: { name },
+            const { commentBody, isLecturer, courseSectionId } = req.body;
+            const { uid } = req.user;
+
+            const findUser = await this.db.user.findUnique({
+                where: { id: uid },
             });
+
+            if (!findUser) return this.notFound(res, "User not found.");
+
+            const createdComment = await this.db.comment.create({
+                data: {
+                    commentBody,
+                    isLecturer,
+                    courseSectionId,
+                    userId: findUser.id,
+                },
+            });
+
             return this.created(res, {
                 code: res.statusCode,
-                data: createCategory,
-                message: "Category created successfully",
+                data: createdComment,
+                message: "Comment created successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -24,18 +38,18 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Get all categories.
+     * Get all comments.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category[]>}
+     * @returns {Promise<import("@prisma/client").Comment[]>}
      */
     async getAll(req, res) {
         try {
-            const categories = await this.db.category.findMany();
+            const comments = await this.db.comment.findMany();
             return this.ok(res, {
                 code: res.statusCode,
-                data: categories,
-                message: "Successfully retrieved all categories",
+                data: comments,
+                message: "Successfully retrieved all comments",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -43,20 +57,24 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Get category details by ID.
+     * Get comment details by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").Comment>}
      */
     async getDetail(req, res) {
         try {
             const { id } = req.params;
-            const result = await this.db.category.findUnique({ where: { id } });
-            if (!result) return this.notFound(res, "Category not found.");
+            const comment = await this.db.comment.findUnique({
+                where: { id },
+            });
+
+            if (!comment) return this.notFound(res, "Comment not found.");
+
             return this.ok(res, {
                 code: res.statusCode,
-                data: result,
-                message: "Successfully retrieved category details",
+                data: comment,
+                message: "Successfully retrieved comment details",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -64,23 +82,25 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Update category details by ID.
+     * Update comment details by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").Comment>}
      */
     async update(req, res) {
         try {
+            const { commentBody, isLecturer } = req.body;
             const { id } = req.params;
-            const { name } = req.body;
-            const updatedCategory = await this.db.category.update({
+
+            const updatedComment = await this.db.comment.update({
+                data: { commentBody, isLecturer },
                 where: { id },
-                data: { name },
             });
+
             return this.ok(res, {
                 code: res.statusCode,
-                data: updatedCategory,
-                message: "Category updated successfully",
+                data: updatedComment,
+                message: "Comment updated successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -88,7 +108,7 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Delete category by ID.
+     * Delete comment by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
      * @returns {Promise<void>}
@@ -96,10 +116,10 @@ class CategoryController extends BaseController {
     async delete(req, res) {
         try {
             const { id } = req.params;
-            await this.db.category.delete({ where: { id } });
+            await this.db.comment.delete({ where: { id } });
             return this.ok(res, {
                 code: res.statusCode,
-                message: "Category deleted successfully",
+                message: "Comment deleted successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -107,4 +127,4 @@ class CategoryController extends BaseController {
     }
 }
 
-module.exports = CategoryController;
+module.exports = CommentController;

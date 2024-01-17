@@ -6,6 +6,7 @@ const lecturerRouter = Router()
 const lecturerController = new LecturerController()
 
 lecturerRouter.post("/", lecturerController.create)
+lecturerRouter.get("/", lecturerController.getAllLecturer)
 lecturerRouter.get("/:id", lecturerController.getDetail)
 lecturerRouter.get("/:id/courses", lecturerController.getAllCourses)
 lecturerRouter.put("/:id", lecturerController.update)

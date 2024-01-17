@@ -14,7 +14,8 @@ class ProfileController extends BaseController {
             const findUser = await this.db.profile.findUnique({ where: { userId: uid } })
             if (findUser) return this.conflict(res, "this user profile already created")
             const createProfile = await this.db.profile.create({
-                data: { dob: new Date(), fullname, userId: uid },
+                data: { dob: dob, fullname, userId: uid },
+                select: { dob: true, fullname: true },
             })
             return this.created(res, {
                 code: res.statusCode,
@@ -35,7 +36,10 @@ class ProfileController extends BaseController {
     async getDetail(req, res) {
         try {
             const { uid } = req.user
-            const result = await this.db.profile.findUnique({ where: { userId: uid } })
+            const result = await this.db.profile.findUnique({
+                where: { userId: uid },
+                select: { dob: true, fullname: true },
+            })
 
             if (!result) {
                 return this.notFound(res, "Profile not found.")
@@ -61,9 +65,14 @@ class ProfileController extends BaseController {
         try {
             const { uid } = req.user
             const { dob, fullname } = req.body
+            const findProfile = await this.db.profile.findUnique({ where: { userId: uid } })
+            if (!findProfile) {
+                return this.notFound(res, "Profile not found.")
+            }
             const updatedProfile = await this.db.profile.update({
                 where: { userId: uid },
                 data: { dob, fullname },
+                select: { dob: true, fullname: true },
             })
             return this.ok(res, {
                 code: res.statusCode,
@@ -84,6 +93,10 @@ class ProfileController extends BaseController {
     async delete(req, res) {
         try {
             const { uid } = req.user
+            const findProfile = await this.db.profile.findUnique({ where: { userId: uid } })
+            if (!findProfile) {
+                return this.notFound(res, "Profile not found.")
+            }
             await this.db.profile.delete({ where: { userId: uid } })
             return this.ok(res, {
                 code: res.statusCode,

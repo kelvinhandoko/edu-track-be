@@ -1,22 +1,29 @@
 const BaseController = require("./BaseController");
 
-class CategoryController extends BaseController {
+class CourseStatusController extends BaseController {
     /**
-     * Create a new category.
+     * Create a new course_status.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").course_status>}
      */
     async create(req, res) {
         try {
-            const { name } = req.body;
-            const createCategory = await this.db.category.create({
-                data: { name },
+            const { userId, courseId, completion, type } = req.body;
+            const createdCourseStatus = await this.db.course_status.create({
+                data: {
+                    userId,
+                    courseId,
+                    completion,
+                    type,
+                    createdAt: new Date(),
+                    updatedAt: new Date(),
+                },
             });
             return this.created(res, {
                 code: res.statusCode,
-                data: createCategory,
-                message: "Category created successfully",
+                data: createdCourseStatus,
+                message: "Course status created successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -24,39 +31,22 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Get all categories.
+     * Get course_status by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category[]>}
-     */
-    async getAll(req, res) {
-        try {
-            const categories = await this.db.category.findMany();
-            return this.ok(res, {
-                code: res.statusCode,
-                data: categories,
-                message: "Successfully retrieved all categories",
-            });
-        } catch (error) {
-            return this.fail(res, error.message);
-        }
-    }
-
-    /**
-     * Get category details by ID.
-     * @param {import('express').Request} req - The request object from Express.
-     * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").course_status>}
      */
     async getDetail(req, res) {
         try {
             const { id } = req.params;
-            const result = await this.db.category.findUnique({ where: { id } });
-            if (!result) return this.notFound(res, "Category not found.");
+            const result = await this.db.course_status.findUnique({
+                where: { id },
+            });
+            if (!result) return this.notFound(res, "Course status not found.");
             return this.ok(res, {
                 code: res.statusCode,
                 data: result,
-                message: "Successfully retrieved category details",
+                message: "Successfully retrieved course status details",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -64,23 +54,29 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Update category details by ID.
+     * Update course_status by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
-     * @returns {Promise<import("@prisma/client").Category>}
+     * @returns {Promise<import("@prisma/client").course_status>}
      */
     async update(req, res) {
         try {
+            const { userId, courseId, completion, type } = req.body;
             const { id } = req.params;
-            const { name } = req.body;
-            const updatedCategory = await this.db.category.update({
+            const updatedData = await this.db.course_status.update({
+                data: {
+                    userId,
+                    courseId,
+                    completion,
+                    type,
+                    updatedAt: new Date(),
+                },
                 where: { id },
-                data: { name },
             });
             return this.ok(res, {
                 code: res.statusCode,
-                data: updatedCategory,
-                message: "Category updated successfully",
+                data: updatedData,
+                message: "Course status updated successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -88,7 +84,7 @@ class CategoryController extends BaseController {
     }
 
     /**
-     * Delete category by ID.
+     * Delete course_status by ID.
      * @param {import('express').Request} req - The request object from Express.
      * @param {import('express').Response} res - The response object from Express.
      * @returns {Promise<void>}
@@ -96,10 +92,10 @@ class CategoryController extends BaseController {
     async delete(req, res) {
         try {
             const { id } = req.params;
-            await this.db.category.delete({ where: { id } });
+            await this.db.course_status.delete({ where: { id } });
             return this.ok(res, {
                 code: res.statusCode,
-                message: "Category deleted successfully",
+                message: "Course status deleted successfully",
             });
         } catch (error) {
             return this.fail(res, error.message);
@@ -107,4 +103,4 @@ class CategoryController extends BaseController {
     }
 }
 
-module.exports = CategoryController;
+module.exports = CourseStatusController;

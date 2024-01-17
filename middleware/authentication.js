@@ -10,7 +10,7 @@ const authentication = async (req, res, next) => {
         req.user = decodedToken
         next()
     } catch (error) {
-        res.status(500).send(error.message)
+        res.status(500).send("errornya disini")
     }
 }
 
