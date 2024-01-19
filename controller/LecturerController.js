@@ -12,7 +12,7 @@ class LecturerController extends BaseController {
             const { name, bio } = req.body
             const { uid } = req.user
             const findLecturer = await this.db.lecturer.findUnique({
-                where: { name_userId: { userId: uid, name } },
+                where: { userId: uid },
             })
             if (findLecturer) return this.conflict(res, "lecturer sudah dibuat.")
             const createLecturer = await this.db.lecturer.create({
@@ -35,8 +35,10 @@ class LecturerController extends BaseController {
     async getDetail(req, res) {
         try {
             const { id } = req.params
+            const { uid } = req.user
+            const whereClause = id ? { id } : { userId: uid }
             const result = await this.db.lecturer.findUnique({
-                where: { id },
+                where: whereClause,
                 include: { Course: { include: { CourseSection: true } } },
             })
 
@@ -46,7 +48,7 @@ class LecturerController extends BaseController {
             })
             return this.ok(res, {
                 code: res.statusCode,
-                data: { ...result, pictureUrl: findProfile.pictureUrl },
+                data: { ...result, profile: findProfile },
                 message: "success get lecturer detail",
             })
         } catch (error) {
@@ -61,9 +63,9 @@ class LecturerController extends BaseController {
      */
     async update(req, res) {
         try {
-            const { id } = req.params
+            const { uid } = req.user
             const { name, bio } = req.body
-            const result = await this.db.lecturer.findUnique({ where: { id } })
+            const result = await this.db.lecturer.findUnique({ where: { userId: uid } })
 
             if (!result) return this.notFound(res, "lecturer not found.")
             const updatedLecturer = await this.db.lecturer.update({
@@ -88,8 +90,8 @@ class LecturerController extends BaseController {
      */
     async delete(req, res) {
         try {
-            const { id } = req.params
-            const result = await this.db.lecturer.findUnique({ where: { id } })
+            const { uid } = req.user
+            const result = await this.db.lecturer.findUnique({ where: { userId: uid } })
 
             if (!result) return this.notFound(res, "lecturer not found.")
             const deletedLecturer = await this.db.lecturer.delete({ where: { id } })
@@ -112,19 +114,23 @@ class LecturerController extends BaseController {
     async getAllCourses(req, res) {
         try {
             const { id } = req.params
-            const res = await this.db.course.findMany({
-                where: { lecturerId: id },
+            const { uid } = req.user
+            const whereClause = id ? { lecturerId: id } : { lecturer: { userId: uid } }
+            console.log(whereClause)
+            const result = await this.db.course.findMany({
+                where: whereClause,
                 orderBy: { createdAt: "desc" },
             })
             return this.ok(res, {
                 code: res.statusCode,
-                data: res,
+                data: result,
                 message: "Successfully retrieved all course",
             })
         } catch (error) {
             return this.fail(res, error.message)
         }
     }
+
     /**
      * Get all course by lecturer.
      * @param {import('express').Request} req - The request object from Express.
@@ -133,10 +139,10 @@ class LecturerController extends BaseController {
      */
     async getAllLecturer(req, res) {
         try {
-            const res = await this.db.lecturer.findMany({ orderBy: { createdAt: "asc" } })
+            const response = await this.db.lecturer.findMany()
             return this.ok(res, {
                 code: res.statusCode,
-                data: res,
+                data: response,
                 message: "Successfully retrieved all lecturer",
             })
         } catch (error) {

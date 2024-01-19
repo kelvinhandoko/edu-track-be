@@ -11,7 +11,7 @@ const lecturerAuthorization = async (req, res, next) => {
                 .json({ message: "please login as lecturer to use this feature." })
         next()
     } catch (error) {
-        res.status(500).send(error.message)
+        res.status(500).send("errornya disini")
     }
 }
 

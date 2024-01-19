@@ -1,4 +1,4 @@
-const BaseController = require("./BaseController");
+const BaseController = require("./BaseController")
 
 class CourseStatusController extends BaseController {
     /**
@@ -9,8 +9,8 @@ class CourseStatusController extends BaseController {
      */
     async create(req, res) {
         try {
-            const { userId, courseId, completion, type } = req.body;
-            const createdCourseStatus = await this.db.course_status.create({
+            const { userId, courseId, completion, type } = req.body
+            const createdCourseStatus = await this.db.courseStatus.create({
                 data: {
                     userId,
                     courseId,
@@ -19,14 +19,14 @@ class CourseStatusController extends BaseController {
                     createdAt: new Date(),
                     updatedAt: new Date(),
                 },
-            });
+            })
             return this.created(res, {
                 code: res.statusCode,
                 data: createdCourseStatus,
                 message: "Course status created successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error.message)
         }
     }
 
@@ -38,18 +38,18 @@ class CourseStatusController extends BaseController {
      */
     async getDetail(req, res) {
         try {
-            const { id } = req.params;
+            const { id } = req.params
             const result = await this.db.course_status.findUnique({
                 where: { id },
-            });
-            if (!result) return this.notFound(res, "Course status not found.");
+            })
+            if (!result) return this.notFound(res, "Course status not found.")
             return this.ok(res, {
                 code: res.statusCode,
                 data: result,
                 message: "Successfully retrieved course status details",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error.message)
         }
     }
 
@@ -61,8 +61,8 @@ class CourseStatusController extends BaseController {
      */
     async update(req, res) {
         try {
-            const { userId, courseId, completion, type } = req.body;
-            const { id } = req.params;
+            const { userId, courseId, completion, type } = req.body
+            const { id } = req.params
             const updatedData = await this.db.course_status.update({
                 data: {
                     userId,
@@ -72,14 +72,14 @@ class CourseStatusController extends BaseController {
                     updatedAt: new Date(),
                 },
                 where: { id },
-            });
+            })
             return this.ok(res, {
                 code: res.statusCode,
                 data: updatedData,
                 message: "Course status updated successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error.message)
         }
     }
 
@@ -91,16 +91,16 @@ class CourseStatusController extends BaseController {
      */
     async delete(req, res) {
         try {
-            const { id } = req.params;
-            await this.db.course_status.delete({ where: { id } });
+            const { id } = req.params
+            await this.db.course_status.delete({ where: { id } })
             return this.ok(res, {
                 code: res.statusCode,
                 message: "Course status deleted successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error.message)
         }
     }
 }
 
-module.exports = CourseStatusController;
+module.exports = CourseStatusController

@@ -12,9 +12,9 @@ courseRouter.get("/search", courseController.search)
 courseRouter.get("/detail/:id", courseController.getDetail)
 
 courseRouter.use(lecturerAuthorization)
-
 courseRouter.post("/", courseController.create)
 courseRouter.put("/detail/:id", courseController.update)
+courseRouter.put("/detail/:id/image", courseController.updateImage)
 courseRouter.delete("/detail/:id", courseController.delete)
 
 module.exports = courseRouter

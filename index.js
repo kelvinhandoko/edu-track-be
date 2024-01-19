@@ -9,7 +9,7 @@ const port = process.env.PORT || 5050
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(cors())
-app.use(morgan("dev"))
+app.use(morgan("tiny"))
 app.use("/api", router)
 
 app.listen(port, () => {

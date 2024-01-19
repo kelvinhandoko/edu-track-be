@@ -6,7 +6,7 @@ generator client {
 datasource db {
   provider     = "mysql"
   url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  relationMode = "foreignKeys"
 }
 
 model Category {
@@ -26,8 +26,6 @@ model Lecturer {
   updatedAt DateTime @updatedAt
   userId    String   @unique
   Course    Course[]
-
-  @@unique([name, userId])
 }
 
 model Profile {
@@ -38,13 +36,12 @@ model Profile {
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
   userId     String    @unique
-  User       User[]
 }
 
 model Course {
   id            String          @id @default(cuid())
   name          String
-  price         Int
+  price         Int             @default(0)
   backgroundUrl String?
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
@@ -60,60 +57,35 @@ model Course {
 }
 
 model CourseSection {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
   videoUrl    String
   position    Int
   isPublished Boolean
   isFree      Boolean
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  course      Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  course      Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
   courseId    String
-  Comment     Comment[]
 }
 
 model CourseStatus {
-  id         String   @id @default(cuid())
+  id         String           @id @default(cuid())
   completion Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  type       String
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+  type       CourseStatusType @default(VISITED)
   userId     String
   courseId   String
 
-  User   User   @relation(fields: [userId], references: [id])
   Course Course @relation(fields: [courseId], references: [id])
 
-  @@index([userId])
-  @@index([courseId])
+  @@unique([userId, courseId])
 }
 
-model User {
-  id           String         @id @default(cuid())
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Comment      Comment[]
-  Profile      Profile?       @relation(fields: [profileId], references: [id])
-  CourseStatus CourseStatus[]
-  profileId    String?
-
-  @@index([id])
-}
-
-model Comment {
-  id              String   @id @default(cuid())
-  commentBody     String
-  isLecturer      Boolean
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  courseSectionId String
-  userId          String
-
-  CourseSection CourseSection @relation(fields: [courseSectionId], references: [id])
-  User          User          @relation(fields: [userId], references: [id])
-
-  @@index([courseSectionId])
-  @@index([userId])
+enum CourseStatusType {
+  IN_PROGRESS
+  COMPLETED
+  VISITED
 }
