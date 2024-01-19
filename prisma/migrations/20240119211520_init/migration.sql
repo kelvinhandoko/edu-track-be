@@ -19,7 +19,6 @@ CREATE TABLE `Lecturer` (
     `userId` VARCHAR(191) NOT NULL,
 
     UNIQUE INDEX `Lecturer_userId_key`(`userId`),
-    UNIQUE INDEX `Lecturer_name_userId_key`(`name`, `userId`),
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -41,7 +40,7 @@ CREATE TABLE `Profile` (
 CREATE TABLE `Course` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
-    `price` INTEGER NOT NULL,
+    `price` INTEGER NOT NULL DEFAULT 0,
     `backgroundUrl` VARCHAR(191) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -83,20 +82,6 @@ CREATE TABLE `CourseStatus` (
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- CreateTable
-CREATE TABLE `Comment` (
-    `id` VARCHAR(191) NOT NULL,
-    `commentBody` VARCHAR(191) NOT NULL,
-    `isLecturer` BOOLEAN NOT NULL,
-    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `updatedAt` DATETIME(3) NOT NULL,
-    `courseSectionId` VARCHAR(191) NOT NULL,
-    `userId` VARCHAR(191) NOT NULL,
-
-    INDEX `Comment_courseSectionId_idx`(`courseSectionId`),
-    PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
 -- AddForeignKey
 ALTER TABLE `Course` ADD CONSTRAINT `Course_categoryId_fkey` FOREIGN KEY (`categoryId`) REFERENCES `Category`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -108,6 +93,3 @@ ALTER TABLE `CourseSection` ADD CONSTRAINT `CourseSection_courseId_fkey` FOREIGN
 
 -- AddForeignKey
 ALTER TABLE `CourseStatus` ADD CONSTRAINT `CourseStatus_courseId_fkey` FOREIGN KEY (`courseId`) REFERENCES `Course`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `Comment` ADD CONSTRAINT `Comment_courseSectionId_fkey` FOREIGN KEY (`courseSectionId`) REFERENCES `CourseSection`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
