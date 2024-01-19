@@ -11,7 +11,7 @@
         "test:int:win": "./scripts/run-integration.ps1",
         "test:int:ui": "./scripts/run-integration.sh --ui",
         "test:coverage": "vitest run --coverage",
-        "vercel-build": "prisma generate && prisma migrate deploy"
+        "vercel-build": "prisma migrate deploy"
     },
     "keywords": [],
     "author": "",
