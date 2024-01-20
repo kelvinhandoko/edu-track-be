@@ -16,5 +16,6 @@ courseRouter.post("/", courseController.create)
 courseRouter.put("/detail/:id", courseController.update)
 courseRouter.put("/detail/:id/image", courseController.updateImage)
 courseRouter.delete("/detail/:id", courseController.delete)
+courseRouter.delete("/section/:id", courseController.deleteSections)
 
 module.exports = courseRouter

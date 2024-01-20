@@ -89,7 +89,7 @@ class CourseController extends BaseController {
             const { id } = req.params
             const result = await this.db.course.findUnique({
                 where: { id },
-                include: { CourseSection: true, lecturer: true },
+                include: { CourseSection: { orderBy: { position: "asc" } }, lecturer: true },
             })
 
             if (!result) return this.notFound(res, "course not found.")
@@ -133,24 +133,24 @@ class CourseController extends BaseController {
                     const { id, courseId, ...sectionProps } = section
                     if (id) {
                         await this.db.courseSection.update({
-                            data: { ...sectionProps, courseId: createdCourse.id },
+                            data: { ...sectionProps, courseId: updatedData.id },
                             where: { id },
                         })
                     } else {
                         await this.db.courseSection.create({
-                            data: { ...sectionProps, courseId: createdCourse.id },
+                            data: { ...sectionProps, courseId: updatedData.id },
                         })
                     }
                 })
             )
 
-            return this.created(res, {
+            return this.ok(res, {
                 code: res.statusCode,
                 data: updatedData,
                 message: "course update successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.clientError(res, error.message)
         }
     }
 
@@ -229,6 +229,28 @@ class CourseController extends BaseController {
             })
         } catch (error) {
             return this.fail(res, error.message)
+        }
+    }
+
+    /**
+     * Delete course sections.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<void>}
+     */
+    async deleteSections(req, res) {
+        try {
+            const { id } = req.params
+            const findSection = await this.db.courseSection.findUnique({ where: { id } })
+            if (!findSection) return this.notFound(res, "section tidak ditemukan")
+            await this.db.courseSection.delete({ where: { id } })
+
+            return this.ok(res, {
+                code: res.statusCode,
+                message: "course section deleted successfully",
+            })
+        } catch (error) {
+            return this.notFound(res, error.message)
         }
     }
 }
