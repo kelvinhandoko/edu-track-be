@@ -9,7 +9,7 @@ const courseController = new CourseController()
 courseRouter.get("/", courseController.getAll)
 courseRouter.get("/search", courseController.search)
 
-courseRouter.get("/detail/:id", courseController.getDetail)
+courseRouter.get("/detail/:id?", courseController.getDetail)
 
 courseRouter.use(lecturerAuthorization)
 courseRouter.post("/", courseController.create)

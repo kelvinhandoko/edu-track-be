@@ -19,7 +19,7 @@ class CategoryController extends BaseController {
                 message: "Category created successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 

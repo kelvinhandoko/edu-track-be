@@ -218,6 +218,7 @@ class CourseController extends BaseController {
         try {
             const { q } = req.query
             const splitQuery = q.split(" ")
+            console.log(splitQuery)
             const findCourses = await this.db.course.findMany({
                 where: { name: { search: `${splitQuery}` } },
             })
