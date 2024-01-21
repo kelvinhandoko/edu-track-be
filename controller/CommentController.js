@@ -1,4 +1,4 @@
-const BaseController = require("./BaseController");
+const BaseController = require("./BaseController")
 
 class CommentController extends BaseController {
     /**
@@ -9,14 +9,14 @@ class CommentController extends BaseController {
      */
     async create(req, res) {
         try {
-            const { commentBody, isLecturer, courseSectionId } = req.body;
-            const { uid } = req.user;
+            const { commentBody, isLecturer, courseSectionId } = req.body
+            const { uid } = req.user
 
             const findUser = await this.db.user.findUnique({
                 where: { id: uid },
-            });
+            })
 
-            if (!findUser) return this.notFound(res, "User not found.");
+            if (!findUser) return this.notFound(res, "User not found.")
 
             const createdComment = await this.db.comment.create({
                 data: {
@@ -25,15 +25,15 @@ class CommentController extends BaseController {
                     courseSectionId,
                     userId: findUser.id,
                 },
-            });
+            })
 
             return this.created(res, {
                 code: res.statusCode,
                 data: createdComment,
                 message: "Comment created successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error)
         }
     }
 
@@ -45,14 +45,14 @@ class CommentController extends BaseController {
      */
     async getAll(req, res) {
         try {
-            const comments = await this.db.comment.findMany();
+            const comments = await this.db.comment.findMany()
             return this.ok(res, {
                 code: res.statusCode,
                 data: comments,
                 message: "Successfully retrieved all comments",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error)
         }
     }
 
@@ -64,20 +64,20 @@ class CommentController extends BaseController {
      */
     async getDetail(req, res) {
         try {
-            const { id } = req.params;
+            const { id } = req.params
             const comment = await this.db.comment.findUnique({
                 where: { id },
-            });
+            })
 
-            if (!comment) return this.notFound(res, "Comment not found.");
+            if (!comment) return this.notFound(res, "Comment not found.")
 
             return this.ok(res, {
                 code: res.statusCode,
                 data: comment,
                 message: "Successfully retrieved comment details",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error)
         }
     }
 
@@ -89,21 +89,21 @@ class CommentController extends BaseController {
      */
     async update(req, res) {
         try {
-            const { commentBody, isLecturer } = req.body;
-            const { id } = req.params;
+            const { commentBody, isLecturer } = req.body
+            const { id } = req.params
 
             const updatedComment = await this.db.comment.update({
                 data: { commentBody, isLecturer },
                 where: { id },
-            });
+            })
 
             return this.ok(res, {
                 code: res.statusCode,
                 data: updatedComment,
                 message: "Comment updated successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error)
         }
     }
 
@@ -115,16 +115,16 @@ class CommentController extends BaseController {
      */
     async delete(req, res) {
         try {
-            const { id } = req.params;
-            await this.db.comment.delete({ where: { id } });
+            const { id } = req.params
+            await this.db.comment.delete({ where: { id } })
             return this.ok(res, {
                 code: res.statusCode,
                 message: "Comment deleted successfully",
-            });
+            })
         } catch (error) {
-            return this.fail(res, error.message);
+            return this.fail(res, error)
         }
     }
 }
 
-module.exports = CommentController;
+module.exports = CommentController

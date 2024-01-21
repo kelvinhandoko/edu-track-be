@@ -23,7 +23,7 @@ class LecturerController extends BaseController {
                 message: "success create lecturer",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
     /**
@@ -52,7 +52,7 @@ class LecturerController extends BaseController {
                 message: "success get lecturer detail",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
     /**
@@ -78,7 +78,7 @@ class LecturerController extends BaseController {
                 message: "success update lecturer",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -101,7 +101,7 @@ class LecturerController extends BaseController {
                 message: "success delete lecturer",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -127,7 +127,7 @@ class LecturerController extends BaseController {
                 message: "Successfully retrieved all course",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -146,7 +146,7 @@ class LecturerController extends BaseController {
                 message: "Successfully retrieved all lecturer",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 }

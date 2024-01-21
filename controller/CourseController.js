@@ -51,7 +51,7 @@ class CourseController extends BaseController {
                 message: "course created successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -74,7 +74,32 @@ class CourseController extends BaseController {
                 message: "Successfully retrieved all courses",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
+        }
+    }
+
+    /**
+     * Get all courses by category.
+     * @param {import('express').Request} req - The request object from Express.
+     * @param {import('express').Response} res - The response object from Express.
+     * @returns {Promise<import("@prisma/client").Course[]>}
+     */
+    async getAllByCategory(req, res) {
+        try {
+            const { categoryId } = req.params
+            const courses = await this.db.course.findMany({
+                orderBy: { createdAt: "asc" },
+                where: { categoryId },
+                include: { lecturer: true, CourseSection: true, category: true },
+            })
+
+            return this.ok(res, {
+                code: res.statusCode,
+                data: courses,
+                message: `Successfully retrieved all  courses`,
+            })
+        } catch (error) {
+            return this.fail(res, error)
         }
     }
 
@@ -99,7 +124,7 @@ class CourseController extends BaseController {
                 message: "Successfully retrieved course details",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -150,7 +175,7 @@ class CourseController extends BaseController {
                 message: "course update successfully",
             })
         } catch (error) {
-            return this.clientError(res, error.message)
+            return this.clientError(res, error)
         }
     }
 
@@ -184,7 +209,7 @@ class CourseController extends BaseController {
                 message: "course update successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -204,7 +229,7 @@ class CourseController extends BaseController {
                 message: "course deleted successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -217,10 +242,16 @@ class CourseController extends BaseController {
     async search(req, res) {
         try {
             const { q } = req.query
-            const splitQuery = q.split(" ")
-            console.log(splitQuery)
+            const splitQuery = q.split("+").join(" ")
             const findCourses = await this.db.course.findMany({
-                where: { name: { search: `${splitQuery}` } },
+                where: {
+                    OR: [
+                        { name: { search: splitQuery } },
+                        { lecturer: { name: { search: splitQuery } } },
+                        { category: { name: { search: splitQuery } } },
+                    ],
+                },
+                include: { lecturer: true, CourseSection: true },
             })
 
             return this.ok(res, {
@@ -229,7 +260,7 @@ class CourseController extends BaseController {
                 data: findCourses,
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -251,7 +282,7 @@ class CourseController extends BaseController {
                 message: "course section deleted successfully",
             })
         } catch (error) {
-            return this.notFound(res, error.message)
+            return this.notFound(res, error)
         }
     }
 }

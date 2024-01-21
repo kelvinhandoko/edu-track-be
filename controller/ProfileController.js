@@ -23,7 +23,7 @@ class ProfileController extends BaseController {
                 message: "profile created successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -51,7 +51,7 @@ class ProfileController extends BaseController {
                 message: "Successfully retrieved profile details",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -80,7 +80,7 @@ class ProfileController extends BaseController {
                 message: "profile updated successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -103,7 +103,7 @@ class ProfileController extends BaseController {
                 message: "profile deleted successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 }

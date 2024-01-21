@@ -38,7 +38,7 @@ class CategoryController extends BaseController {
                 message: "Successfully retrieved all categories",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -59,7 +59,7 @@ class CategoryController extends BaseController {
                 message: "Successfully retrieved category details",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -83,7 +83,7 @@ class CategoryController extends BaseController {
                 message: "Category updated successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -102,7 +102,7 @@ class CategoryController extends BaseController {
                 message: "Category deleted successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 }

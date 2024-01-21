@@ -26,7 +26,7 @@ class CourseStatusController extends BaseController {
                 message: "Course status created successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -49,7 +49,7 @@ class CourseStatusController extends BaseController {
                 message: "Successfully retrieved course status details",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -79,7 +79,7 @@ class CourseStatusController extends BaseController {
                 message: "Course status updated successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 
@@ -98,7 +98,7 @@ class CourseStatusController extends BaseController {
                 message: "Course status deleted successfully",
             })
         } catch (error) {
-            return this.fail(res, error.message)
+            return this.fail(res, error)
         }
     }
 }

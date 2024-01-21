@@ -10,6 +10,7 @@ courseRouter.get("/", courseController.getAll)
 courseRouter.get("/search", courseController.search)
 
 courseRouter.get("/detail/:id?", courseController.getDetail)
+courseRouter.get("/category/:categoryId", courseController.getAllByCategory)
 
 courseRouter.use(lecturerAuthorization)
 courseRouter.post("/", courseController.create)

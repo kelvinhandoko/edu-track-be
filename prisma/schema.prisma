@@ -16,6 +16,8 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   Course    Course[]
+
+  @@fulltext([name])
 }
 
 model Lecturer {
@@ -26,6 +28,8 @@ model Lecturer {
   updatedAt DateTime @updatedAt
   userId    String   @unique
   Course    Course[]
+
+  @@fulltext([name])
 }
 
 model Profile {
