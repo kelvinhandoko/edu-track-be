@@ -11,7 +11,7 @@ lecturerRouter.get("/", lecturerController.getAllLecturer)
 lecturerRouter.get("/detail/:id?", lecturerController.getDetail)
 lecturerRouter.get("/courses/:id?", lecturerController.getAllCourses)
 lecturerRouter.use(lecturerAuthorization)
-lecturerRouter.put("/detail/:id", lecturerController.update)
-lecturerRouter.delete("/detail/:id", lecturerController.delete)
+lecturerRouter.put("/", lecturerController.update)
+lecturerRouter.delete("/", lecturerController.delete)
 
 module.exports = lecturerRouter

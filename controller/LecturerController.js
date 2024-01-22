@@ -69,7 +69,7 @@ class LecturerController extends BaseController {
 
             if (!result) return this.notFound(res, "lecturer not found.")
             const updatedLecturer = await this.db.lecturer.update({
-                where: { id },
+                where: { userId: uid },
                 data: { name, bio },
             })
             return this.ok(res, {
