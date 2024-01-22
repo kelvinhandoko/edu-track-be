@@ -66,6 +66,7 @@ class CourseController extends BaseController {
             const courses = await this.db.course.findMany({
                 orderBy: { createdAt: "asc" },
                 include: { lecturer: true, CourseSection: true },
+                take: 8,
             })
 
             return this.ok(res, {
@@ -242,7 +243,10 @@ class CourseController extends BaseController {
     async search(req, res) {
         try {
             const { q } = req.query
-            const splitQuery = q.split("+").join(" ")
+            const splitQuery = q
+                .split(" ")
+                .map(word => word + "*")
+                .join(" ")
             const findCourses = await this.db.course.findMany({
                 where: {
                     OR: [

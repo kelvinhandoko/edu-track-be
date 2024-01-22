@@ -1,8 +1,6 @@
 const { Router } = require("express")
 const CategoryController = require("../../controller/CategoryController")
 
-const authentication = require("../../middleware/authentication")
-
 const categoryRouter = Router()
 const categoryController = new CategoryController()
 
