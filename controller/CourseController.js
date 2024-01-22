@@ -66,7 +66,6 @@ class CourseController extends BaseController {
             const courses = await this.db.course.findMany({
                 orderBy: { createdAt: "asc" },
                 include: { lecturer: true, CourseSection: true },
-                take: 8,
             })
 
             return this.ok(res, {
