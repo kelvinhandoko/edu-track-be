@@ -63,7 +63,7 @@ model Course {
 model CourseSection {
   id          String   @id @default(cuid())
   title       String
-  description String?
+  description String?  @db.VarChar(1000)
   videoUrl    String
   position    Int
   isPublished Boolean
